@@ -61,38 +61,6 @@ Used the append() method to add each recipe to the list sequentially.
 5. Printed the ingredients for each recipe:
 Iterated over the all_recipes list to display the ingredients of each recipe.
 
-### Example Code
-# Creating individual recipes
-recipe_1 = {
-    'name': 'Tea',
-    'cooking_time': 5,
-    'ingredients': ['Tea leaves', 'Sugar', 'Water']
-}
-
-recipe_2 = {
-    'name': 'Pancakes',
-    'cooking_time': 15,
-    'ingredients': ['Flour', 'Eggs', 'Milk', 'Butter', 'Sugar']
-}
-
-recipe_3 = {
-    'name': 'Omelette',
-    'cooking_time': 10,
-    'ingredients': ['Eggs', 'Salt', 'Pepper', 'Butter']
-}
-
-recipe_4 = {
-    'name': 'Salad',
-    'cooking_time': 5,
-    'ingredients': ['Lettuce', 'Tomatoes', 'Cucumber', 'Olive oil']
-}
-
-recipe_5 = {
-    'name': 'Sandwich',
-    'cooking_time': 7,
-    'ingredients': ['Bread', 'Lettuce', 'Tomatoes', 'Cheese', 'Ham']
-}
-
 # Adding recipes to a list
 all_recipes = [recipe_1, recipe_2, recipe_3, recipe_4, recipe_5]
 
