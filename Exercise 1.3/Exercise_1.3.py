@@ -22,14 +22,14 @@ n = int(input("How many recipes would you like to enter? "))
 print(f"Starting to collect {n} recipes.")
 
 # Loop to collect recipes and update ingredients list
-for i in range(n):
+for i in range(1, n):  # Start from 1 and stop before n
     recipe = take_recipe()
-    print(f"Recipe {i+1} collected.")
+    print(f"Recipe {i} collected.") 
     
     # Add individual ingredients to ingredients_list
     for ingredient in recipe['ingredients']:
         # Strip spaces and convert to lowercase for consistency
-        ingredient = ingredient.strip().lower()  
+        ingredient = ingredient.strip().lower()
         if ingredient and ingredient not in ingredients_list:  
             ingredients_list.append(ingredient)
     
@@ -61,5 +61,5 @@ for recipe in recipes_list:
 
 # Display all ingredients in alphabetical order
 print("\nIngredients you've come across so far:")
-for ingredient in sorted(set(ingredients_list)):  
+for ingredient in sorted(ingredients_list):  
     print(ingredient)
