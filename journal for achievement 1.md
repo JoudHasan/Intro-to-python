@@ -36,7 +36,7 @@ I would suggest using the IPython Shell over the default one because it has a lo
 - **int:** This represents whole numbers, like 10, -5, or 1000. It’s scalar because it holds a single value.
 - **float:** This represents decimal numbers, like 3.14 or -0.01. It’s also scalar.
 - **str:** This represents strings of characters, like "hello" or "Python". It’s non-scalar because it can hold multiple characters as a sequence.
-- **list:** This represents a collection of items, like [1, 2, 3] or ["apple", "banana"]. It’s non-scalar because it can hold multiple values.
+- **list:** This represents a collection of items, like `[1, 2, 3]` or `["apple", "banana"]`. It’s non-scalar because it can hold multiple values.
 
 ---
 
@@ -54,7 +54,7 @@ I used dictionaries to store individual recipes, with each recipe’s attributes
 
 ## Reflection Questions:
 
-1. **Imagine you’re having a conversation with a future colleague about whether to use the iPython Shell instead of Python’s default shell. What reasons would you give to explain the benefits of using the iPython Shell over the default one?**
+1. **Imagine you’re having a conversation with a future colleague about whether to use the IPython Shell instead of Python’s default shell. What reasons would you give to explain the benefits of using the IPython Shell over the default one?**
 
    **Answer:** I’d recommend using IPython because it offers a more interactive and efficient coding environment. IPython includes features like tab completion, which makes writing and editing code faster, and magic commands like `%run` for executing scripts and `%timeit` for measuring the performance of code. IPython also makes debugging easier with commands like `%debug`, allowing you to interact with your code right after an error. Overall, IPython provides a smoother and more feature-rich development experience, particularly when testing and debugging.
 
@@ -63,7 +63,7 @@ I used dictionaries to store individual recipes, with each recipe’s attributes
    - **Integer (int):** A whole number (e.g., 5). Scalar.
    - **Float:** A number with a decimal point (e.g., 3.14). Scalar.
    - **List:** A mutable, ordered collection of items (e.g., [1, 2, 3]). Non-scalar.
-   - **Dictionary:** A collection of key-value pairs (e.g., {'name': 'Joud'}). Non-scalar.
+   - **Dictionary:** A collection of key-value pairs (e.g., `{'name': 'Joud'}`). Non-scalar.
 
 3. **Difference Between Lists and Tuples in Python:**
 
@@ -75,10 +75,14 @@ I used dictionaries to store individual recipes, with each recipe’s attributes
 
    Example:
 
+````python
    vocab = {
-   'run': {'definition': 'move quickly', 'category': 'verb'},
-   'apple': {'definition': 'a fruit', 'category': 'noun'}
+       'run': {'definition': 'move quickly', 'category': 'verb'},
+       'apple': {'definition': 'a fruit', 'category': 'noun'}
    }
+
+
+
    Dictionaries allow for quick lookups and are flexible enough to expand in the future, like adding example sentences or difficulty levels for each word.
 
 # Exercise 1.3: Functions and Other Operations in Python
@@ -89,38 +93,50 @@ I used dictionaries to store individual recipes, with each recipe’s attributes
 The script should ask the user where they want to travel. The user’s input should be checked for 3 different travel destinations that you define. If the user’s input is one of those 3 destinations, the following statement should be printed: “Enjoy your stay in \_\_!” If the user’s input is something other than the defined destinations, the following statement should be printed: “Oops, that destination is not currently available.”
 
 Here’s how I would write the travel app script using an if-elif-else statement:
-
+```python
 destination = input("Where do you want to travel? ")
 
 if destination == "Paris":
-print("Enjoy your stay in Paris!")
+    print("Enjoy your stay in Paris!")
 elif destination == "Tokyo":
-print("Enjoy your stay in Tokyo!")
+    print("Enjoy your stay in Tokyo!")
 elif destination == "New York":
-print("Enjoy your stay in New York!")
+    print("Enjoy your stay in New York!")
 else:
-print("Oops, that destination is not currently available.")
+    print("Oops, that destination is not currently available.")
+
 
 ## Imagine you’re at a job interview for a Python developer role. The interviewer says “Explain logical operators in Python”. Draft how you would respond.
 
-**Answer:** Logical operators in Python are used to combine multiple conditions. There are three main ones:
+**Answer:**
+Logical operators in Python are used to combine multiple conditions. There are three main ones:
 
-- and: This returns True if both conditions are true. For example, True and False gives False.
-- or: This returns True if at least one of the conditions is true. For example, True or False gives True.
-- not: This reverses the Boolean value, so if something is True, not will make it False, and vice versa.
+- **and**: This returns `True` if both conditions are true. For example, `True and False` gives `False`.
+- **or**: This returns `True` if at least one of the conditions is true. For example, `True or False` gives `True`.
+- **not**: This reverses the Boolean value, so if something is `True`, `not` will make it `False`, and vice versa.
+
+---
 
 ## What are functions in Python? When and why are they useful?
 
-**Answer:** Functions in Python are reusable blocks of code that perform specific tasks. They are useful because they make the code more organized and easier to maintain. Instead of writing the same code multiple times, I can write a function once and call it whenever needed. This makes my code shorter and more efficient. Functions can also accept parameters and return values, which allows them to be flexible.
+**Answer:**
+Functions in Python are reusable blocks of code that perform specific tasks. They are useful because they make the code more organized and easier to maintain. Instead of writing the same code multiple times, I can write a function once and call it whenever needed. This makes my code shorter and more efficient. Functions can also accept parameters and return values, which allows them to be flexible.
 
 Example:
-
+```python
 def greet(name):
-return f"Hello, {name}!"
-
+    return f"Hello, {name}!"
+print(greet('John'))  # Output: Hello, John!
 print(greet('John')) # Output: Hello, John!
+
 Functions help break complex problems into smaller, manageable pieces.
 
 ## In the section for Exercise 1 in this Learning Journal, you were asked in question 3 to set some goals for yourself while you complete this course. In preparation for your next mentor call, make some notes on how you’ve progressed towards your goals so far.
 
-I’ve been making progress toward my goals, especially in understanding conditional statements and loops. I’ve learned to use if-elif-else statements to control the flow of my program, and I’m getting better at writing functions to make my code more modular. Using loops has helped me reduce repetitive code, and I feel more confident about organizing my programs. Moving forward, I’d like to focus on improving my ability to handle edge cases and work with larger datasets more efficiently.
+I’ve been making progress toward my goals, especially in understanding conditional statements and loops. I’ve learned to use `if-elif-else` statements to control the flow of my program, and I’m getting better at writing functions to make my code more modular. Using loops has helped me reduce repetitive code, and I feel more confident about organizing my programs.
+
+Moving forward, I’d like to focus on improving my ability to handle edge cases and work with larger datasets more efficiently.
+
+
+
+````
