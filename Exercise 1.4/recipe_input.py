@@ -16,7 +16,7 @@ def take_recipe():
     cooking_time = int(input("Enter the cooking time (in minutes): "))
     ingredients = input("Enter the ingredients (separated by commas): ").split(',')
     
-    ingredients = [ingredient.strip() for ingredient in ingredients]  # Clean up spaces
+    ingredients = [ingredient.strip() for ingredient in ingredients]  
     difficulty = calc_difficulty(cooking_time, len(ingredients))
     
     return {
@@ -49,16 +49,20 @@ finally:
 num_recipes = int(input("How many recipes would you like to enter? "))
 
 # Add the recipes
-for i in range(1, num_recipes + 1):
-    print(f"Entering recipe {i}/{num_recipes}")
+for i in range(1, num_recipes+1): # start counting from 1.
+    print(f'Provide info for recipe {i}') # indicate the number of recipe the using is currently entering
+
     recipe = take_recipe()
 
-    # Add new ingredients to all_ingredients if not already present
-    all_ingredients.update(recipe["ingredients"])
     
-    # Add the new recipe to the recipes_list
+    # Add new ingredients to all_ingredients if not already present
+    for element in recipe["ingredients"]:
+        if element not in all_ingredients:
+            all_ingredients.append(element)
+    
+     # Add the new recipe to the recipes_list
     recipes_list.append(recipe)
-    print(f"Recipe {i} added successfully!")
+    print("Recipe added successfully!")
 
 # Update the dictionary with the new data
 data = {
