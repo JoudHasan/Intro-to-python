@@ -27,7 +27,7 @@ def take_recipe():
     }
 
 # Get the filename for saving/loading recipes
-filename = input("Enter the filename for your recipes: ")
+filename = input("Enter the filename for your recipes: ") + '.bin'
 
 # Try to load the existing data from the file
 try:
@@ -37,34 +37,33 @@ except FileNotFoundError:
     print(f"File {filename} not found. Initializing new recipe data.")
     data = {
         'recipes_list': [],
-        'all_ingredients': []
+        'all_ingredients': set()
     }
 else:
     print(f"File {filename} loaded successfully.")
 finally:
-    recipes_list = data.get('recipes_list', [])
-    all_ingredients = data.get('all_ingredients', [])
+    recipes_list = data['recipes_list']
+    all_ingredients = set(data['all_ingredients'])
 
 # Ask the user how many recipes to enter
 num_recipes = int(input("How many recipes would you like to enter? "))
 
 # Add the recipes
-for i in range(0, num_recipes):
+for i in range(1, num_recipes + 1):
+    print(f"Entering recipe {i}/{num_recipes}")
     recipe = take_recipe()
 
     # Add new ingredients to all_ingredients if not already present
-    for element in recipe["ingredients"]:
-        if element not in all_ingredients:
-            all_ingredients.append(element)
+    all_ingredients.update(recipe["ingredients"])
     
     # Add the new recipe to the recipes_list
     recipes_list.append(recipe)
-    print("Recipe added successfully!")
+    print(f"Recipe {i} added successfully!")
 
 # Update the dictionary with the new data
 data = {
     'recipes_list': recipes_list,
-    'all_ingredients': all_ingredients
+    'all_ingredients': list(all_ingredients)  # Save as a list
 }
 
 # Save the updated data to the binary file

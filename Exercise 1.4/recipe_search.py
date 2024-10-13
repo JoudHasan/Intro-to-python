@@ -1,7 +1,6 @@
 import pickle
 
-
-# function to displat the recipe
+# function to display the recipe
 def display_recipe(recipe):
     print("")
     print("Recipe: ", recipe["name"])
@@ -24,7 +23,7 @@ def search_ingredients(data):
     for ele in numbered_list:
         print(ele[0], ele[1])
     try:
-        num = int(input("Enter the number for ingredents you would like to search: "))
+        num = int(input("Enter the number for ingredients you would like to search: "))
         ingredient_searched = numbered_list[num][1]
         print("Searching for recipes with", ingredient_searched, "...")
     except ValueError:
@@ -36,19 +35,18 @@ def search_ingredients(data):
     else:
         for ele in data["recipes_list"]:
             if ingredient_searched in ele["ingredients"]:
-                print(ele)
+                display_recipe(ele)
 
 
-filename = input("Enter the name of the file you want to save to: ")
+filename = input("Enter the name of the file you want to save to: ") + '.bin'
 
 try:
-    file = open(filename, "rb")
-    data = pickle.load(file)
-    print("File loaded successfully!")
+    with open(filename, "rb") as file:
+        data = pickle.load(file)
+        print("File loaded successfully!")
 except FileNotFoundError:
     print("No files match that name - please try again")
-except:
-    print("Oops, there was an unexpected error")
+except Exception as e:
+    print(f"Oops, there was an unexpected error: {e}")
 else:
-    file.close()
     search_ingredients(data)
