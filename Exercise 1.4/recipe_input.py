@@ -49,18 +49,16 @@ finally:
 num_recipes = int(input("How many recipes would you like to enter? "))
 
 # Add the recipes
-for i in range(1, num_recipes+1): # start counting from 1.
-    print(f'Provide info for recipe {i}') # indicate the number of recipe the using is currently entering
+for i in range(1, num_recipes + 1):  # Start counting from 1.
+    print(f'Provide info for recipe {i}')  # Indicate the current recipe number
 
     recipe = take_recipe()
 
-    
     # Add new ingredients to all_ingredients if not already present
     for element in recipe["ingredients"]:
-        if element not in all_ingredients:
-            all_ingredients.append(element)
-    
-     # Add the new recipe to the recipes_list
+        all_ingredients.add(element)  # Use add() for a set
+
+    # Add the new recipe to the recipes_list
     recipes_list.append(recipe)
     print("Recipe added successfully!")
 
