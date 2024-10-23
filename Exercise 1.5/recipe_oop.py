@@ -23,6 +23,7 @@ class Recipe:
     def add_ingredients(self, *ingredients):
         self.ingredients.extend(ingredients)
         self.update_all_ingredients()
+        self.calculate_difficulty()  # Ensure difficulty is recalculated when ingredients change
 
     def get_ingredients(self):
         return self.ingredients
@@ -50,20 +51,21 @@ class Recipe:
             Recipe.all_ingredients.add(ingredient)
 
     def __str__(self):
-        return "Recipe: " + self.name + "\n" + \
-               "Cooking Time: " + str(self.cooking_time) + " minutes\n" + \
-               "Ingredients: " + ", ".join(self.ingredients) + "\n" + \
-               "Difficulty: " + self.get_difficulty() + "\n"
+        return f"""Recipe: {self.name}
+Cooking Time: {self.cooking_time} minutes
+Ingredients: {", ".join(self.ingredients)}
+Difficulty: {self.get_difficulty()}
+"""
 
     def recipe_search(self, data, search_term):
-        print("\nSearching for recipes with '" + search_term + "':")
+        print(f"\nSearching for recipes with '{search_term}':")
         found = False
         for recipe in data:
             if recipe.search_ingredient(search_term):
                 print(recipe)
                 found = True
         if not found:
-            print("No recipes found with '" + search_term + "'.")
+            print(f"No recipes found with '{search_term}'.")
 
 # Main Code to Create and Search Recipes
 if __name__ == "__main__":
@@ -77,7 +79,7 @@ if __name__ == "__main__":
 
     cake = Recipe("Cake")
     cake.add_ingredients("Sugar", "Butter", "Eggs", "Vanilla Essence",
-                         "Flour", "Baking Powder", "Milk")
+                        "Flour", "Baking Powder", "Milk")
     cake.set_cooking_time(50)
 
     smoothie = Recipe("Banana Smoothie")
