@@ -1,19 +1,33 @@
 import mysql.connector
 
 def create_connection():
-    """Create a connection and ensure the task_database exists."""
+    """Establish a connection to the MySQL server."""
     conn = mysql.connector.connect(
         host="localhost",
         user="cf-python",
         password="password"
     )
-    cursor = conn.cursor()
-    cursor.execute("CREATE DATABASE IF NOT EXISTS task_database;")  
-    cursor.execute("USE task_database;") 
-    return conn, cursor
+    return conn
+
+def create_database(cursor):
+    """Create the task_database if it does not exist."""
+    cursor.execute("CREATE DATABASE IF NOT EXISTS task_database;")
+    cursor.execute("USE task_database;")
+
+def initialize_table(cursor):
+    """Create the Recipes table if it does not exist in task_database."""
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS Recipes (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(50),
+        ingredients VARCHAR(255),
+        cooking_time INT,
+        difficulty VARCHAR(20)
+    );
+    """)
 
 def calculate_difficulty(cooking_time, ingredients):
-    """Calculates the difficulty level of the recipe."""
+    """Calculate the difficulty level of the recipe."""
     if cooking_time < 10 and len(ingredients) < 4:
         return "Easy"
     elif cooking_time < 10 and len(ingredients) >= 4:
@@ -30,7 +44,7 @@ def sanitize_ingredients(ingredients):
 
 def display_and_select_recipe(cursor):
     """Display all recipes and prompt the user to select one by ID."""
-    cursor.execute("SELECT id, name FROM Recipes;") 
+    cursor.execute("SELECT id, name FROM Recipes;")
     recipes = cursor.fetchall()
     if not recipes:
         print("No recipes available.")
@@ -52,11 +66,11 @@ def display_and_select_recipe(cursor):
 
 def update_difficulty(cursor, recipe_id):
     """Recalculate and update the difficulty of a recipe based on current cooking time and ingredients."""
-    cursor.execute("SELECT cooking_time, ingredients FROM Recipes WHERE id = %s;", (recipe_id,))  
+    cursor.execute("SELECT cooking_time, ingredients FROM Recipes WHERE id = %s;", (recipe_id,))
     row = cursor.fetchone()
     if row:
         difficulty = calculate_difficulty(row[0], row[1].split(", "))
-        cursor.execute("UPDATE Recipes SET difficulty = %s WHERE id = %s;", (difficulty, recipe_id))  
+        cursor.execute("UPDATE Recipes SET difficulty = %s WHERE id = %s;", (difficulty, recipe_id))
 
 def create_recipe(conn, cursor):
     """Create a new recipe and add it to the database."""
@@ -70,28 +84,24 @@ def create_recipe(conn, cursor):
     insert_query = """
     INSERT INTO Recipes (name, ingredients, cooking_time, difficulty)
     VALUES (%s, %s, %s, %s);
-    """  # Semicolon added here
+    """
     cursor.execute(insert_query, (name, sanitized_ingredients, cooking_time, difficulty))
     conn.commit()
     print("Recipe added successfully!")
 
-def search_recipe(conn, cursor):
+def search_recipe(cursor):
     """Search for recipes by an ingredient with enhanced formatting."""
-    # Retrieve distinct ingredients from the database
-    cursor.execute("SELECT DISTINCT ingredients FROM Recipes;")  
+    cursor.execute("SELECT DISTINCT ingredients FROM Recipes;")
     results = cursor.fetchall()
 
-    # Compile a set of all unique ingredients
     all_ingredients = set()
     for row in results:
         all_ingredients.update(row[0].split(", "))
 
-    # Display available ingredients for selection
     print("\nAvailable ingredients:")
     for idx, ingredient in enumerate(sorted(all_ingredients), start=1):
         print(f"{idx}. {ingredient}")
 
-    # Prompt user to select an ingredient by number
     try:
         choice = int(input("Choose an ingredient by number to search: ").strip()) - 1
         search_ingredient = sorted(all_ingredients)[choice]
@@ -99,16 +109,13 @@ def search_recipe(conn, cursor):
         print("Invalid choice. Please try again.")
         return
 
-    # Search for recipes containing the selected ingredient
     search_query = "SELECT * FROM Recipes WHERE ingredients LIKE %s;"
-    cursor.execute(search_query, ('%' + search_ingredient + '%',)) 
+    cursor.execute(search_query, ('%' + search_ingredient + '%',))
     results = cursor.fetchall()
 
-    # Display recipes in the specified format if results are found
     if results:
         print("\nRecipes with the selected ingredient:")
         for row in results:
-            # Formatting each attribute on a new line
             print(f"ID: {row[0]}")
             print(f"Name: {row[1]}")
             print(f"Ingredients:")
@@ -116,10 +123,9 @@ def search_recipe(conn, cursor):
                 print(f"  - {ingredient}")
             print(f"Cooking Time: {row[3]} mins")
             print(f"Difficulty: {row[4]}")
-            print("\n" + "-" * 30 + "\n")  
+            print("\n" + "-" * 30 + "\n")
     else:
         print("No recipes found with that ingredient.")
-
 
 def update_recipe(conn, cursor):
     """Update an existing recipe."""
@@ -127,7 +133,7 @@ def update_recipe(conn, cursor):
     if recipe_id is None:
         return
 
-    cursor.execute("SELECT * FROM Recipes WHERE id = %s;", (recipe_id,))  
+    cursor.execute("SELECT * FROM Recipes WHERE id = %s;", (recipe_id,))
     row = cursor.fetchone()
     print("\nCurrent Recipe Details:")
     print(f"Name: {row[1]}, Ingredients: {row[2]}, Cooking Time: {row[3]}, Difficulty: {row[4]}")
@@ -151,7 +157,7 @@ def update_recipe(conn, cursor):
             return
 
     update_query = f"UPDATE Recipes SET {column_to_update} = %s WHERE id = %s;"
-    cursor.execute(update_query, (new_value, recipe_id)) 
+    cursor.execute(update_query, (new_value, recipe_id))
 
     if column_to_update in ['ingredients', 'cooking_time']:
         update_difficulty(cursor, recipe_id)
@@ -165,7 +171,7 @@ def delete_recipe(conn, cursor):
     if recipe_id is None:
         return
 
-    cursor.execute("DELETE FROM Recipes WHERE id = %s;", (recipe_id,)) 
+    cursor.execute("DELETE FROM Recipes WHERE id = %s;", (recipe_id,))
     conn.commit()
     print("Recipe deleted successfully!")
 
@@ -183,7 +189,7 @@ def main_menu(conn, cursor):
         if choice == '1':
             create_recipe(conn, cursor)
         elif choice == '2':
-            search_recipe(conn, cursor)
+            search_recipe(cursor)
         elif choice == '3':
             update_recipe(conn, cursor)
         elif choice == '4':
@@ -196,16 +202,11 @@ def main_menu(conn, cursor):
             print("Invalid choice. Please try again.")
 
 if __name__ == "__main__":
-    conn, cursor = create_connection()
+    conn = create_connection()
+    cursor = conn.cursor()
 
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS Recipes (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(50),
-        ingredients VARCHAR(255),
-        cooking_time INT,
-        difficulty VARCHAR(20)
-    );
-    """)  
+    create_database(cursor)
+    initialize_table(cursor)
 
     main_menu(conn, cursor)
+   
