@@ -80,9 +80,9 @@ def create_recipe():
         return
 
     ingredients = []
-    num_ingredients = int(input("How many ingredients? "))
-    for i in range(num_ingredients):
-        ingredient = input(f"Enter ingredient {i + 1}: ")
+    num_ingredients = int(input("How many ingredients? ")) # 5 -> range(1, 5)
+    for i in range(1, num_ingredients + 1):
+        ingredient = input(f"Enter ingredient {i}: ")
         ingredients.append(ingredient)
 
     ingredients_str = ", ".join(ingredients)
@@ -107,33 +107,28 @@ def search_by_ingredients():
         return
 
     results = session.query(Recipe.ingredients).all()
-    all_ingredients = []
+    all_ingredients = set()
     for row in results:
         ingredients_list = row[0].split(", ")
-        for ingredient in ingredients_list:
-            if ingredient not in all_ingredients:
-                all_ingredients.append(ingredient)
+        all_ingredients.update(ingredients_list)  # Use update to add unique ingredients
 
     print("Available ingredients:")
-for i, ingredient in enumerate(all_ingredients):
-    print(f"{i}. {ingredient}")
+    for i, ingredient in enumerate(all_ingredients, 1):
+        print(f"{i}. {ingredient}")
 
     print("Enter the numbers corresponding to ingredients separated by spaces (e.g., '3 5 7'):")
     selected_indices = input("Your choice: ")
 
     try:
         selected_indices = list(map(int, selected_indices.split()))
-        if any(num < 1 or num > len(all_ingredients) for num in selected_indices):
-            print("One or more selected numbers are out of range. Please try again.")
-            return
-    except ValueError:
-        print("Invalid input. Please enter only numbers separated by spaces.")
+        search_ingredients = [list(all_ingredients)[i - 1] for i in selected_indices]
+    except (ValueError, IndexError):
+        print("Invalid input. Please enter only numbers within the available range.")
         return
 
-    search_ingredients = [all_ingredients[i - 1] for i in selected_indices]
     conditions = [Recipe.ingredients.like(f"%{ingredient}%") for ingredient in search_ingredients]
-
     recipes = session.query(Recipe).filter(*conditions).all()
+
     if recipes:
         for recipe in recipes:
             print(recipe)
@@ -179,7 +174,11 @@ def edit_recipe():
         else:
             print("Invalid choice.")
             return
-        recipe_to_edit.calculate_difficulty()
+
+        # Update difficulty if relevant fields are edited
+        if choice != 1: 
+            recipe_to_edit.calculate_difficulty()
+        
         session.commit()
         print("Recipe updated successfully!")
     except ValueError:
