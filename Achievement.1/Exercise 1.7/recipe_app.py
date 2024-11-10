@@ -1,6 +1,7 @@
-from sqlalchemy import create_engine, Column, Integer, String, text
+from sqlalchemy import create_engine, Column, Integer, String, Enum
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from enum import Enum as PyEnum
 
 # Database setup
 DATABASE_URL = "mysql+mysqlconnector://cf-python:Password@localhost/task_database"
@@ -11,6 +12,13 @@ session = Session()
 # Base class
 Base = declarative_base()
 
+# Enum for Difficulty Levels
+class DifficultyLevel(PyEnum):
+    EASY = "Easy"
+    MEDIUM = "Medium"
+    INTERMEDIATE = "Intermediate"
+    HARD = "Hard"
+
 # Recipe Model
 class Recipe(Base):
     __tablename__ = 'final_recipes'
@@ -19,7 +27,7 @@ class Recipe(Base):
     name = Column(String(50), nullable=False)
     ingredients = Column(String(255), nullable=False)
     cooking_time = Column(Integer, nullable=False)
-    difficulty = Column(String(20), nullable=False)
+    difficulty = Column(Enum(DifficultyLevel), nullable=False)
 
     def __repr__(self):
         return f"<Recipe(id={self.id}, name={self.name}, difficulty={self.difficulty})>"
@@ -32,15 +40,16 @@ class Recipe(Base):
                 f"Difficulty: {self.difficulty}\n" + "-"*20)
 
     def calculate_difficulty(self):
+        # Only recalculate difficulty if cooking_time or ingredients change
         ingredients_list = self.return_ingredients_as_list()
         if self.cooking_time < 10 and len(ingredients_list) < 4:
-            self.difficulty = "Easy"
+            self.difficulty = DifficultyLevel.EASY
         elif self.cooking_time < 20 and len(ingredients_list) < 6:
-            self.difficulty = "Medium"
+            self.difficulty = DifficultyLevel.MEDIUM
         elif self.cooking_time >= 20 and len(ingredients_list) < 6:
-            self.difficulty = "Intermediate"
+            self.difficulty = DifficultyLevel.INTERMEDIATE
         else:
-            self.difficulty = "Hard"
+            self.difficulty = DifficultyLevel.HARD
 
     def return_ingredients_as_list(self):
         if not self.ingredients:
@@ -49,6 +58,13 @@ class Recipe(Base):
 
 # Create the table in the database
 Base.metadata.create_all(engine)
+
+# Helper function to check if recipes exist in the database
+def check_recipes_exist():
+    if session.query(Recipe).count() == 0:
+        print("No recipes found.")
+        return False
+    return True
 
 # Function to create a new recipe
 def create_recipe():
@@ -79,17 +95,15 @@ def create_recipe():
 
 # Function to view all recipes
 def view_all_recipes():
-    recipes = session.query(Recipe).all()
-    if not recipes:
-        print("No recipes found.")
+    if not check_recipes_exist():
         return
+    recipes = session.query(Recipe).all()
     for recipe in recipes:
         print(recipe)
 
 # Function to search recipes by ingredients
 def search_by_ingredients():
-    if session.query(Recipe).count() == 0:
-        print("No recipes found.")
+    if not check_recipes_exist():
         return
 
     results = session.query(Recipe.ingredients).all()
@@ -101,8 +115,8 @@ def search_by_ingredients():
                 all_ingredients.append(ingredient)
 
     print("Available ingredients:")
-    for i, ingredient in enumerate(all_ingredients):
-        print(f"{i + 1}. {ingredient}")
+for i, ingredient in enumerate(all_ingredients):
+    print(f"{i}. {ingredient}")
 
     print("Enter the numbers corresponding to ingredients separated by spaces (e.g., '3 5 7'):")
     selected_indices = input("Your choice: ")
@@ -128,11 +142,10 @@ def search_by_ingredients():
 
 # Function to edit a recipe
 def edit_recipe():
-    recipes = session.query(Recipe).all()
-    if not recipes:
-        print("No recipes found.")
+    if not check_recipes_exist():
         return
 
+    recipes = session.query(Recipe).all()
     for recipe in recipes:
         print(f"{recipe.id}: {recipe.name}")
     try:
@@ -151,8 +164,16 @@ def edit_recipe():
         if choice == 1:
             recipe_to_edit.name = input("New name: ")
         elif choice == 2:
-            ingredients = input("New ingredients (comma separated): ")
-            recipe_to_edit.ingredients = ingredients
+            print("1. Replace ingredients\n2. Add ingredients")
+            update_choice = input("Choose update method: ")
+            if update_choice == '1':
+                recipe_to_edit.ingredients = input("New ingredients (comma separated): ")
+            elif update_choice == '2':
+                additional_ingredients = input("Additional ingredients (comma separated): ")
+                recipe_to_edit.ingredients += ", " + additional_ingredients
+            else:
+                print("Invalid choice.")
+                return
         elif choice == 3:
             recipe_to_edit.cooking_time = int(input("New cooking time: "))
         else:
@@ -166,11 +187,10 @@ def edit_recipe():
 
 # Function to delete a recipe
 def delete_recipe():
-    recipes = session.query(Recipe).all()
-    if not recipes:
-        print("No recipes found.")
+    if not check_recipes_exist():
         return
 
+    recipes = session.query(Recipe).all()
     for recipe in recipes:
         print(f"{recipe.id}: {recipe.name}")
     try:
