@@ -1,0 +1,168 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Me - Joud Hasan</title>
+    <style>
+        /* Inline Styles for About Me Page */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #ffffff;
+            background: url("{% static 'recipes/Images/welcome.png' %}") no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+        }
+
+        .home-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 0.8rem 1.5rem;
+            background-color: #28a745;
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.3s;
+            z-index: 10;
+        }
+
+        .home-btn:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+
+        .about-me-content {
+            position: absolute;
+            top: 60%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            width: 100%;
+            max-width: 600px;
+            padding: 2rem;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .about-me-content h1,
+        .about-me-content h2 {
+            color: #ffffff;
+            margin-bottom: 1.5rem;
+        }
+
+        .about-me-content p {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        .about-me-content ul {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+            text-align: left;
+        }
+
+        .about-me-content li {
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .portfolio-button {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background-color: #123c18;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .portfolio-button:hover {
+            background-color: #0e6c26;
+        }
+
+        .contact-link {
+            color: #0e9a5a;
+            text-decoration: none;
+        }
+
+        .contact-link:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+            font-size: 0.9rem;
+            z-index: 10;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="overlay"></div>
+    <!-- Home Button at the top-right -->
+    <a href="{% url 'recipes:home' %}" class="home-btn">Home</a>
+    <div class="about-me-content">
+        <h1>About Me</h1>
+        <h2>Hello! I'm Joud Hasan</h2>
+        <p>
+            I'm a <strong>Full-Stack Developer</strong> with a background in <strong>journalism</strong> and
+            <strong>project management</strong>. My passion for coding and problem-solving has led me to build
+            dynamic, user-friendly web applications. I enjoy turning creative ideas into reality through clean and
+            efficient code.
+        </p>
+        <h2>Skills</h2>
+        <ul>
+            <li><strong>Frontend:</strong> HTML, CSS, JavaScript, React, Angular</li>
+            <li><strong>Backend:</strong> Node.js, Express.js, Python, Flask, Django</li>
+            <li><strong>Databases:</strong> MongoDB, PostgreSQL, MySQL</li>
+            <li><strong>Other:</strong> RESTful APIs, Git, Agile methodologies</li>
+        </ul>
+        <h2>Portfolio</h2>
+        <a href="https://joudhasan.github.io/portfolio-website/" target="_blank" class="portfolio-button">🔗
+            Portfolio Website</a>
+        <h2>Contact Me</h2>
+        <ul>
+            <li><strong>Email:</strong> <a href="mailto:joud.hasan85@gmail.com"
+                    class="contact-link">joud.hasan85@gmail.com</a></li>
+            <li><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/joud-hasan-145221230" target="_blank"
+                    class="contact-link">www.linkedin.com/in/joud-hasan-145221230</a></li>
+            <li><strong>GitHub:</strong> <a href="https://github.com/JoudHasan" target="_blank"
+                    class="contact-link">github.com/JoudHasan</a></li>
+        </ul>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Recipe App. All rights reserved.</p>
+    </footer>
+</body>
+
+</html>
